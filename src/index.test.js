@@ -1,34 +1,34 @@
-const { validateNode } = require("./index");
+const { validateNode } = require('./index');
 
-describe("validateNode", () => {
-  it("returns error when modifier used without block or element", () => {
-    const div = createDiv(`
+describe('validateNode', () => {
+    it('returns error when modifier used without block or element', () => {
+        const div = createDiv(`
       <div class="block_modifier"></div>
     `);
 
-    const errors = validateNode(div);
+        const errors = validateNode(div);
 
-    expect(errors.length).toBe(1);
-    expect(errors[0]).toBe(
-      "Modifier without block or element in classList (modifier: block_modifier, path: )"
-    );
-  });
+        expect(errors.length).toBe(1);
+        expect(errors[0]).toBe(
+            'Modifier without block or element in classList (modifier: block_modifier, path: )',
+        );
+    });
 
-  it("returns error when element has no block in parents", () => {
-    const div = createDiv(`
+    it('returns error when element has no block in parents', () => {
+        const div = createDiv(`
     <div class="block__element"></div>
   `);
 
-    const errors = validateNode(div);
+        const errors = validateNode(div);
 
-    expect(errors.length).toBe(1);
-    expect(errors[0]).toBe(
-      "Element without block in parents (element: block__element, path: )"
-    );
-  });
+        expect(errors.length).toBe(1);
+        expect(errors[0]).toBe(
+            'Element without block in parents (element: block__element, path: )',
+        );
+    });
 
-  it("returns error when element has same element as parent", () => {
-    const div = createDiv(`
+    it('returns error when element has same element as parent', () => {
+        const div = createDiv(`
     <div class="block">
       <div class="block__element">
         <div class="block__element"></div>
@@ -36,16 +36,16 @@ describe("validateNode", () => {
     </div>
   `);
 
-    const errors = validateNode(div);
+        const errors = validateNode(div);
 
-    expect(errors.length).toBe(1);
-    expect(errors[0]).toBe(
-      "Element is in element with same name (element: block__element, path:  > block > block__element)"
-    );
-  });
+        expect(errors.length).toBe(1);
+        expect(errors[0]).toBe(
+            'Element is in element with same name (element: block__element, path:  > block > block__element)',
+        );
+    });
 
-  it("does not return error for valid BEM", () => {
-    const div = createDiv(`
+    it('does not return error for valid BEM', () => {
+        const div = createDiv(`
     <div class="block">
       <div class="block__element block__element_modifier">
       </div>
@@ -56,15 +56,30 @@ describe("validateNode", () => {
     </div>
   `);
 
-    const errors = validateNode(div);
+        const errors = validateNode(div);
 
-    expect(errors.length).toBe(0);
-  });
+        expect(errors.length).toBe(0);
+    });
+
+    it('returns error when block is in block', () => {
+        const div = createDiv(`
+    <div class="block">
+      <div class="block"></div>
+    </div>
+  `);
+
+        const errors = validateNode(div);
+
+        expect(errors.length).toBe(1);
+        expect(errors[0]).toBe(
+            'Block are in same block (block: block, path  > block)',
+        );
+    });
 });
 
 function createDiv(innerHtml) {
-  const div = document.createElement("div");
-  div.innerHTML = innerHtml;
+    const div = document.createElement('div');
+    div.innerHTML = innerHtml;
 
-  return div;
+    return div;
 }

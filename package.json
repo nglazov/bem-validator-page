@@ -8,7 +8,8 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "jest": "^26.5.2"
+    "jest": "^26.5.2",
+    "prettier": "^2.1.2"
   },
   "keywords": [],
   "jest": {
