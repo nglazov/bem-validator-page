@@ -1,0 +1,17 @@
+{
+  "name": "bem-validator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.html",
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "jest": "^26.5.2"
+  },
+  "keywords": [],
+  "jest": {
+    "verbose": true
+  }
+}

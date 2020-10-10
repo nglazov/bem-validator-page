@@ -1,0 +1,8 @@
+body {
+  font-family: sans-serif;
+}
+
+textarea {
+  width: 100%;
+  height: 400px;
+}
