@@ -97,6 +97,14 @@ function validateNode(node, parentArray = []) {
                 )})`,
             );
         }
+
+        if (className.split('__').length > 2) {
+            errors.push(
+                `It could not be element of element (element: ${className}, path: ${getParentPath(
+                    parentArray,
+                )})`,
+            );
+        }
     });
 
     if (node.children) {

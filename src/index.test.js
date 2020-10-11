@@ -75,6 +75,19 @@ describe('validateNode', () => {
             'Block are in same block (block: block, path  > block)',
         );
     });
+
+    it('returns error when class named like block__element__element', () => {
+        const div = createDiv(`
+            <div class="block"><div class="block__element__element"></div></div>
+        `);
+
+        const errors = validateNode(div);
+
+        expect(errors.length).toBe(1);
+        expect(errors[0]).toBe(
+            'It could not be element of element (element: block__element__element, path:  > block)',
+        );
+    });
 });
 
 function createDiv(innerHtml) {
