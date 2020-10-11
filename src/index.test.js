@@ -40,7 +40,7 @@ describe('validateNode', () => {
 
         expect(errors.length).toBe(1);
         expect(errors[0]).toBe(
-            'Element is in element with same name (element: block__element, path:  > block > block__element)',
+            'Element is in element with same name (element: block__element, path: block > block__element)',
         );
     });
 
@@ -72,7 +72,7 @@ describe('validateNode', () => {
 
         expect(errors.length).toBe(1);
         expect(errors[0]).toBe(
-            'Block are in same block (block: block, path  > block)',
+            'Block are in same block (block: block, path block)',
         );
     });
 
@@ -85,7 +85,7 @@ describe('validateNode', () => {
 
         expect(errors.length).toBe(1);
         expect(errors[0]).toBe(
-            'It could not be element of element (element: block__element__element, path:  > block)',
+            'It could not be element of element (element: block__element__element, path: block)',
         );
     });
 });
