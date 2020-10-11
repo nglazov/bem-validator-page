@@ -119,6 +119,7 @@ function validateNode(node, parentArray = []) {
 
 function getParentPath(parents) {
     return parents
+        .filter((element) => element.length > 0)
         .map((element) =>
             Array.isArray(element) ? element.join('.') : element,
         )
