@@ -8,16 +8,16 @@ const ul = document.querySelector('ul');
 
 function validate() {
     ul.innerHTML = '';
+    const parser = new DOMParser();
     const text = document.querySelector('textarea').value;
-    var div = document.createElement('div');
-    div.innerHTML = text.trim();
+    const inputDocument = parser.parseFromString(text.trim(), 'text/html');
 
-    if (!text || !div.children[0]) {
+    if (!text || !inputDocument.body) {
         insertErrors();
         return;
     }
 
-    const errors = validateNode(div.children[0]);
+    const errors = validateNode(inputDocument.body);
 
     insertErrors(errors);
 }
