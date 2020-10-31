@@ -6,3 +6,23 @@ textarea {
   width: 100%;
   height: 400px;
 }
+
+.info {
+  content: 'ℹ️';
+  position: relative;
+  cursor: pointer;
+}
+
+.info__image {
+  position: absolute;
+  top: .5rem;
+  left: 1rem;
+  display: none;
+  width: 1000px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.info:hover .info__image {
+  display: block;
+}

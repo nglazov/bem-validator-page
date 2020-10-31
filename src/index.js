@@ -1,4 +1,4 @@
-let ul;
+let errorsContainer;
 let language;
 
 const ERROR_CODE = {
@@ -34,13 +34,13 @@ const ERROR_TRANSLATION = {
 init();
 
 function validate() {
-    ul.innerHTML = '';
+    errorsContainer.innerHTML = '';
     const parser = new DOMParser();
     const text = document.querySelector('textarea').value;
     const inputDocument = parser.parseFromString(text.trim(), 'text/html');
 
     if (!text || !inputDocument.body) {
-        insertErrors();
+        errorsContainer.innerHTML = 'No errors';
         return;
     }
 
@@ -49,19 +49,41 @@ function validate() {
     insertErrors(errors);
 }
 
-function insertErrors(errors) {
+function insertErrors(errors = []) {
     if (!errors.length) {
         errors.push('No errors');
     }
 
-    errors.forEach((error) => {
+    const groupedErrors = errors.reduce((sum, error) => {
+        const { code } = error;
+        if (sum[code]) {
+            sum[code].push(error);
+        } else {
+            sum[code] = [error];
+        }
+        return sum;
+    }, {});
+
+    Object.keys(groupedErrors).forEach((key) => {
+        const errorGroup = groupedErrors[key];
+
         const li = document.createElement('li');
-        li.innerText = `${
-            ERROR_TRANSLATION[language][error.code]
-        } (className: ${error.className} path: ${getParentPath(
-            error.parentArray,
-        )})`;
-        ul.appendChild(li);
+        li.innerHTML = `<span class="info">ℹ️<img class="info__image" src="./images/${key}.png"></span><b>${ERROR_TRANSLATION[language][key]}</b>`;
+
+        const ul = document.createElement('ul');
+
+        errorGroup.forEach((error) => {
+            const li = document.createElement('li');
+            li.innerText = `className: ${error.className} path: ${getParentPath(
+                error.parentArray,
+            )}`;
+
+            ul.appendChild(li);
+        });
+
+        li.appendChild(ul);
+
+        errorsContainer.appendChild(li);
     });
 }
 
@@ -193,7 +215,7 @@ function init() {
 
     language = getLanguage();
 
-    ul = document.querySelector('ul');
+    errorsContainer = document.querySelector('ul');
 }
 
 module.exports = {
