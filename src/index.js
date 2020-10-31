@@ -1,10 +1,37 @@
-const button = document.querySelector('button');
-if (button) {
-    button.addEventListener('click', validate);
-}
+let ul;
+let language;
 
-// console.log = ()=>{}
-const ul = document.querySelector('ul');
+const ERROR_CODE = {
+    NO_PARENT_BLOCK: 'NO_PARENT_BLOCK',
+    RECURSIVE_ELEMENT: 'RECURSIVE_ELEMENT',
+    ONLY_MODIFIER: 'ONLY_MODIFIER',
+    RECURSIVE_BLOCK: 'RECURSIVE_BLOCK',
+    ELEMENT_OF_ELEMENT: 'ELEMENT_OF_ELEMENT',
+};
+
+const ERROR_TRANSLATION = {
+    ru: {
+        [ERROR_CODE.ELEMENT_OF_ELEMENT]: 'Не может быть элемента у элемента',
+        [ERROR_CODE.RECURSIVE_BLOCK]: 'Блок вложен в блок с таким же именем',
+        [ERROR_CODE.RECURSIVE_ELEMENT]:
+            'Элемент вложен в элемент с таким же именем',
+        [ERROR_CODE.NO_PARENT_BLOCK]:
+            'Элемент используется без блока в родителях',
+        [ERROR_CODE.ONLY_MODIFIER]:
+            'Модификатор используется без блока или элемента',
+    },
+    en: {
+        [ERROR_CODE.ELEMENT_OF_ELEMENT]: 'It could not be element of element',
+        [ERROR_CODE.RECURSIVE_BLOCK]: 'Block is in block with same name',
+        [ERROR_CODE.RECURSIVE_ELEMENT]: 'Element is in element with same name',
+        [ERROR_CODE.NO_PARENT_BLOCK]:
+            'Element was used without block as parent',
+        [ERROR_CODE.ONLY_MODIFIER]:
+            'Modifier was used without block or element',
+    },
+};
+
+init();
 
 function validate() {
     ul.innerHTML = '';
@@ -29,20 +56,14 @@ function insertErrors(errors) {
 
     errors.forEach((error) => {
         const li = document.createElement('li');
-        li.innerText = `${ERROR_TRANSLATION['ru'][error.code]} (className: ${
-            error.className
-        } path: ${getParentPath(error.parentArray)})`;
+        li.innerText = `${
+            ERROR_TRANSLATION[language][error.code]
+        } (className: ${error.className} path: ${getParentPath(
+            error.parentArray,
+        )})`;
         ul.appendChild(li);
     });
 }
-
-const ERROR_CODE = {
-    NO_PARENT_BLOCK: 'NO_PARENT_BLOCK',
-    RECURSIVE_ELEMENT: 'RECURSIVE_ELEMENT',
-    ONLY_MODIFIER: 'ONLY_MODIFIER',
-    RECURSIVE_BLOCK: 'RECURSIVE_BLOCK',
-    ELEMENT_OF_ELEMENT: 'ELEMENT_OF_ELEMENT',
-};
 
 function validateNode(node, parentArray = []) {
     const errors = [];
@@ -153,27 +174,27 @@ function parseClassName(className) {
     return { blockName, elementName, modifierName, modifierValue };
 }
 
-const ERROR_TRANSLATION = {
-    ru: {
-        [ERROR_CODE.ELEMENT_OF_ELEMENT]: 'Не может быть элемента у элемента',
-        [ERROR_CODE.RECURSIVE_BLOCK]: 'Блок вложен в блок с таким же именем',
-        [ERROR_CODE.RECURSIVE_ELEMENT]:
-            'Элемент вложен в элемент с таким же именем',
-        [ERROR_CODE.NO_PARENT_BLOCK]:
-            'Элемент используется без блока в родителях',
-        [ERROR_CODE.ONLY_MODIFIER]:
-            'Модификатор используется без блока или элемента',
-    },
-    en: {
-        [ERROR_CODE.ELEMENT_OF_ELEMENT]: 'It could not be element of element',
-        [ERROR_CODE.RECURSIVE_BLOCK]: 'Block is in block with same name',
-        [ERROR_CODE.RECURSIVE_ELEMENT]: 'Element is in element with same name',
-        [ERROR_CODE.NO_PARENT_BLOCK]:
-            'Element was used without block as parent',
-        [ERROR_CODE.ONLY_MODIFIER]:
-            'Modifier was used without block or element',
-    },
-};
+function getLanguage() {
+    const searchParams = new URLSearchParams(location.search);
+    const language = searchParams.get('language');
+
+    if (ERROR_TRANSLATION[language]) {
+        return language;
+    }
+
+    return 'en';
+}
+
+function init() {
+    const button = document.querySelector('button');
+    if (button) {
+        button.addEventListener('click', validate);
+    }
+
+    language = getLanguage();
+
+    ul = document.querySelector('ul');
+}
 
 module.exports = {
     validateNode,
