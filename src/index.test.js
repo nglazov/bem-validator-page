@@ -1,4 +1,4 @@
-const { validateNode } = require('./index');
+const { validateNode, ERROR_CODE } = require('./index');
 
 describe('validateNode', () => {
     it('returns error when modifier used without block or element', () => {
@@ -9,9 +9,11 @@ describe('validateNode', () => {
         const errors = validateNode(div);
 
         expect(errors.length).toBe(1);
-        expect(errors[0]).toBe(
-            'Modifier without block or element in classList (modifier: block_modifier, path: )',
-        );
+        expect(errors[0]).toStrictEqual({
+            code: ERROR_CODE.ONLY_MODIFIER,
+            className: 'block_modifier',
+            parentArray: [[]],
+        });
     });
 
     it('returns error when element has no block in parents', () => {
@@ -22,9 +24,11 @@ describe('validateNode', () => {
         const errors = validateNode(div);
 
         expect(errors.length).toBe(1);
-        expect(errors[0]).toBe(
-            'Element without block in parents (element: block__element, path: )',
-        );
+        expect(errors[0]).toStrictEqual({
+            code: ERROR_CODE.NO_PARENT_BLOCK,
+            className: 'block__element',
+            parentArray: [[]],
+        });
     });
 
     it('returns error when element has same element as parent', () => {
@@ -39,9 +43,11 @@ describe('validateNode', () => {
         const errors = validateNode(div);
 
         expect(errors.length).toBe(1);
-        expect(errors[0]).toBe(
-            'Element is in element with same name (element: block__element, path: block > block__element)',
-        );
+        expect(errors[0]).toStrictEqual({
+            code: ERROR_CODE.RECURSIVE_ELEMENT,
+            className: 'block__element',
+            parentArray: [[], ['block'], ['block__element']],
+        });
     });
 
     it('does not return error for valid BEM', () => {
@@ -71,9 +77,11 @@ describe('validateNode', () => {
         const errors = validateNode(div);
 
         expect(errors.length).toBe(1);
-        expect(errors[0]).toBe(
-            'Block are in same block (block: block, path block)',
-        );
+        expect(errors[0]).toStrictEqual({
+            code: ERROR_CODE.RECURSIVE_BLOCK,
+            className: 'block',
+            parentArray: [[], ['block']],
+        });
     });
 
     it('returns error when class named like block__element__element', () => {
@@ -84,9 +92,11 @@ describe('validateNode', () => {
         const errors = validateNode(div);
 
         expect(errors.length).toBe(1);
-        expect(errors[0]).toBe(
-            'It could not be element of element (element: block__element__element, path: block)',
-        );
+        expect(errors[0]).toStrictEqual({
+            code: ERROR_CODE.ELEMENT_OF_ELEMENT,
+            className: 'block__element__element',
+            parentArray: [[], ['block']],
+        });
     });
 });
 
