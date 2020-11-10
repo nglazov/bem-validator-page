@@ -54,15 +54,6 @@ function insertErrors(errors = []) {
         errors.push('No errors');
     }
 
-    const groupedErrors = errors.reduce((sum, error) => {
-        const { code } = error;
-        if (sum[code]) {
-            sum[code].push(error);
-        } else {
-            sum[code] = [error];
-        }
-        return sum;
-    }, {});
 
     Object.keys(groupedErrors).forEach((key) => {
         const errorGroup = groupedErrors[key];
