@@ -31,6 +31,11 @@ const ERROR_TRANSLATION = {
     },
 };
 
+const GOOD_JOB = {
+    ru: '👍 Отлично!',
+    en: '👍 Great!',
+};
+
 init();
 
 function validate() {
@@ -51,9 +56,21 @@ function validate() {
 
 function insertErrors(errors = []) {
     if (!errors.length) {
-        errors.push('No errors');
+        const li = document.createElement('li');
+        li.innerText = GOOD_JOB[language];
+
+        errorsContainer.appendChild(li);
     }
 
+    const groupedErrors = errors.reduce((sum, error) => {
+        const { code } = error;
+        if (sum[code]) {
+            sum[code].push(error);
+        } else {
+            sum[code] = [error];
+        }
+        return sum;
+    }, {});
 
     Object.keys(groupedErrors).forEach((key) => {
         const errorGroup = groupedErrors[key];
