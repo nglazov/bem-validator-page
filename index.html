@@ -3,15 +3,22 @@
   <head>
     <title>BEM Validator</title>
     <meta charset="UTF-8" />
+    <link rel="shortcut icon" href="./images/ui/favicon.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./src/styles.css">
   </head>
 
-  <body>
-    <div id="app"></div>
-    <textarea placeholder="Put here content of your tag body"></textarea>
-    <button>validate</button>
-    <ul></ul>
-
+  <body class="page">
+    <h1 class="logo">BEM<span>Validator</span></h1>
+    <div class="content">
+      <textarea placeholder="Put here content of your tag body"></textarea>
+      <div class="page__wrapper">
+        <button class="button">validate</button>
+        <ul class="errors-list"></ul>
+      </div>
+    </div>
+    <p class="footer">
+      Сделано наставником <a href="https://praktikum.yandex.ru" target="_blank">Яндекс.Практикума</a> Никитой Глазовым <a href="https://github.com/nglazov/bem-validator-page" target="_blank">GitHub</a></p>
     <script src="src/index.js" type="module"></script>
   </body>
 </html>

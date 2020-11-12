@@ -68,20 +68,25 @@ function insertErrors(errors = []) {
         const errorGroup = groupedErrors[key];
 
         const li = document.createElement('li');
-        li.innerHTML = `<span class="info">ℹ️<img class="info__image" src="./images/${key}.png"></span><b>${ERROR_TRANSLATION[language][key]}</b>`;
+        li.innerHTML = `<span class="info"><span class="info__icon"></span><b>${ERROR_TRANSLATION[language][key]}</b></span>`;
 
         const ul = document.createElement('ul');
 
         errorGroup.forEach((error) => {
             const li = document.createElement('li');
-            li.innerText = `className: ${error.className} path: ${getParentPath(
+            li.innerHTML = `className: <span class="code">${error.className}</span>, path: <span class="code">${getParentPath(
                 error.parentArray,
-            )}`;
+            )}</span>`;
 
             ul.appendChild(li);
         });
 
+        const errorImage = document.createElement('img');
+        errorImage.setAttribute('src', `./images/${key}.png`);
+        errorImage.classList.add('error-image');
+
         li.appendChild(ul);
+        li.appendChild(errorImage);
 
         errorsContainer.appendChild(li);
     });
