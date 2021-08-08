@@ -31,6 +31,11 @@ const ERROR_TRANSLATION = {
     },
 };
 
+const OK_TRANSLATION = {
+    ru: 'BEMissimo 🤌 (Всё хорошо)',
+    en: 'BEMissimo 🤌 (Everything good)',
+};
+
 init();
 
 function validate() {
@@ -51,7 +56,12 @@ function validate() {
 
 function insertErrors(errors = []) {
     if (!errors.length) {
-        errors.push('No errors');
+        const everythingGood = document.createElement('li');
+        everythingGood.innerHTML = OK_TRANSLATION[language];
+
+        errorsContainer.appendChild(everythingGood);
+
+        return;
     }
 
     const groupedErrors = errors.reduce((sum, error) => {
@@ -68,13 +78,16 @@ function insertErrors(errors = []) {
         const errorGroup = groupedErrors[key];
 
         const li = document.createElement('li');
+        li.classList.add('info');
         li.innerHTML = `<span class="info"><span class="info__icon"></span><b>${ERROR_TRANSLATION[language][key]}</b></span>`;
 
         const ul = document.createElement('ul');
 
         errorGroup.forEach((error) => {
             const li = document.createElement('li');
-            li.innerHTML = `className: <span class="code">${error.className}</span>, path: <span class="code">${getParentPath(
+            li.innerHTML = `className: <span class="code">${
+                error.className
+            }</span>, path: <span class="code">${getParentPath(
                 error.parentArray,
             )}</span>`;
 
