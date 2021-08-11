@@ -39,6 +39,7 @@ const OK_TRANSLATION = {
 init();
 
 function validate() {
+    language = getLanguage();
     errorsContainer.innerHTML = '';
     const parser = new DOMParser();
     const text = document.querySelector('textarea').value;
@@ -51,10 +52,10 @@ function validate() {
 
     const errors = validateNode(inputDocument.body);
 
-    insertErrors(errors);
+    insertErrors(errors, language);
 }
 
-function insertErrors(errors = []) {
+function insertErrors(errors = [], language) {
     if (!errors.length) {
         const everythingGood = document.createElement('li');
         everythingGood.innerHTML = OK_TRANSLATION[language];
@@ -226,7 +227,17 @@ function getLanguage() {
 }
 
 function init() {
-    const button = document.querySelector('button');
+    const button = document.querySelector('.button');
+    const buttonSwithLanguage = document.querySelector('.switch-lang__checkbox');
+
+    language = getLanguage();
+    language === 'ru' && (buttonSwithLanguage.checked = true);
+
+    buttonSwithLanguage && buttonSwithLanguage.addEventListener('input', () => {
+        setLanguage(buttonSwithLanguage);
+        validate();  
+    });
+
     if (button) {
         button.addEventListener('click', validate);
     }
@@ -234,6 +245,26 @@ function init() {
     language = getLanguage();
 
     errorsContainer = document.querySelector('ul');
+}
+
+function insertUrlParam(key, value) {
+    if (history.pushState) {
+        let searchParams = new URLSearchParams(window.location.search);
+        searchParams.set(key, value);
+        let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + searchParams.toString();
+        window.history.pushState({path: newurl}, '', newurl);
+    }
+}
+
+function setLanguage(buttonSwithLanguage) {
+
+    if (buttonSwithLanguage.checked) {
+        insertUrlParam('language', 'ru');
+    }
+    else {
+        insertUrlParam('language', 'en');
+    }
+
 }
 
 module.exports = {
